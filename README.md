@@ -42,6 +42,11 @@ note: you can skip this step of installing wsl if you have it already. or altern
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y g++ make build-essential python3 python3-venv python3-pip python3-dev
 ```
+- for macOS
+```bash
+xcode-select --install
+```
+
 (Ensure g++ is installed and supports C++17. `g++ --version` should show a modern release.)
 
 3) Clone the official Octra reference client
