@@ -25,7 +25,7 @@ This guide covers:
 
 ## Full step-by-step setup
 
-> These exact steps are taken from the official reference client and from real-world usage.
+> Note : just ignore step 1 if you have wsl/wsl2 already. 
 
 1) Install WSL2 (Windows only)
 - Open PowerShell as Administrator and run:
@@ -40,6 +40,12 @@ wsl --install
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y g++ make build-essential python3 python3-venv python3-pip python3-dev
 ```
+
+- for macOS
+```bash
+xcode-select --install
+```
+
 (Ensure g++ is installed and supports C++17. `g++ --version` should show a modern release.)
 
 3) Clone the official Octra reference client
