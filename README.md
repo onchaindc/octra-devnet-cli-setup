@@ -1,73 +1,82 @@
 # Octra Devnet Reference Client Setup Guide
 
-## Introduction
-Welcome to the Octra Devnet reference client setup guide! This document provides a comprehensive, step-by-step approach for beginners to set up the Octra devnet client.
+This guide provides comprehensive instructions for setting up the Octra devnet reference client. Follow the steps based on your operating system: Windows (WSL2), Linux, or macOS.
 
-## Environment Setup
-Before you begin, ensure that you have the following software installed:
-- Git: [Download Git](https://git-scm.com/downloads)
-- Node.js: [Download Node.js](https://nodejs.org/en/download/)
-- A Code Editor: (e.g., Visual Studio Code, Atom)
+## Prerequisites
+- Ensure you have the latest version of Git installed.
+- Node.js and npm must be installed on your system.
+- Familiarity with command line operations.
 
-## Step-by-Step Instructions
-1. **Clone the Repository**  
-   Open your command line interface (CLI) and run:
+## Setup Instructions
+
+### For Windows (WSL2)
+1. **Install WSL2**: Follow the official Microsoft documentation to install WSL2.
+2. **Install Linux Distro**: Choose and install a Linux distribution from the Microsoft Store (e.g., Ubuntu).
+3. **Open your Linux Terminal**: Access your Linux terminal from the start menu.
+4. **Clone the Repository**:
    ```bash
    git clone https://github.com/onchaindc/octra-devnet-cli-setup.git
-   ```
-
-2. **Navigate to the Directory**  
-   ```bash
    cd octra-devnet-cli-setup
    ```
-
-3. **Install Dependencies**  
+5. **Install Dependencies**:
    ```bash
    npm install
    ```
-
-4. **Configure Environment Variables**  
-   Create a `.env` file in the root directory and add the following:
+6. **Setup Wallet Configuration**:
+   - Follow the wallet configuration guide provided in the repository.
+7. **Run the Application**:
    ```bash
-   OCTRA_API_KEY=<your_api_key>
+   npm start
    ```
 
-## Wallet Configuration
-1. **Create a Wallet**  
-   You can create a new wallet using:
+### For Linux
+1. **Open Terminal**.
+2. **Clone the Repository**:
    ```bash
-   node createWallet.js
+   git clone https://github.com/onchaindc/octra-devnet-cli-setup.git
+   cd octra-devnet-cli-setup
+   ```
+3. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+4. **Setup Wallet Configuration**:
+   - Refer to the wallet configuration guide provided in the repository.
+5. **Run the Application**:
+   ```bash
+   npm start
    ```
 
-2. **Load Your Wallet**  
-   Use your existing wallet by loading it with:
+### For macOS
+1. **Open Terminal**.
+2. **Clone the Repository**:
    ```bash
-   node loadWallet.js <path_to_your_wallet_file>
+   git clone https://github.com/onchaindc/octra-devnet-cli-setup.git
+   cd octra-devnet-cli-setup
+   ```
+3. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+4. **Setup Wallet Configuration**:
+   - Follow the wallet configuration guide.
+5. **Run the Application**:
+   ```bash
+   npm start
    ```
 
-## Usage Examples
-- To check your balance:
-   ```bash
-   node checkBalance.js
-   ```
+## Troubleshooting
+- **Common Issues**:
+  - Ensure Node.js and npm are correctly installed.
+  - Check if your network connection is stable.
+- **Logs**:
+  - Review application logs for error messages.
 
-- To send a transaction:
-   ```bash
-   node sendTransaction.js
-   ```
+## Tips
+- **Windows Users**: Make sure WSL2 is properly configured for optimal performance.
+- **Linux Users**: Ensure you have the necessary permissions to run scripts.
+- **macOS Users**: Consider using Homebrew for package management.
 
-## Troubleshooting Section
-- **Issue**: Cannot connect to the server.  
-   **Solution**: Check if your API key is correct and the server is running.
+---
 
-- **Issue**: Wallet not found.  
-   **Solution**: Ensure the path to your wallet file is correct.
-
-## Tips for Windows WSL2 Users
-- Make sure to enable the Windows Subsystem for Linux and install a Linux distribution from the Microsoft Store (e.g., Ubuntu).
-- Use the Linux command line to follow the instructions above.
-
-## Tips for Linux/macOS Users
-- You should be able to run the commands directly in your Terminal with no modifications needed.
-
-Happy coding!
+For further assistance, please refer to the official documentation or raise an issue in the repository.
