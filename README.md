@@ -1,287 +1,78 @@
-# Octra-Devnet-CLI-Setup-Guide
+# Octra Web Client - Super Simple Setup (WSL / Ubuntu)
 
-A beginner-friendly, copy-paste-ready guide to set up the official Octra devnet reference client (octra_ref_client) from scratch — optimized for Windows + WSL2 (Ubuntu 22.04 / 24.04), but also works on native Linux (Ubuntu/Debian) and macOS.
+**Last updated:** February 27, 2026  
+**For Windows users with WSL/Ubuntu** (the fastest & cleanest way)
 
-This guide covers:
-- full environment requirements
-- exact step-by-step install (including libpvac build)
-- wallet.json setup (use the devnet RPC IP)
-- running the CLI and post-setup tasks (faucet, explorer)
-- a troubleshooting section with concrete fixes
-- a one-click install script (review before running)
+This is the **official web wallet** for Octra Devnet — runs locally in your browser at `http://127.0.0.1:8420`.
 
-🚨 Read carefully and copy-paste the commands into your terminal. Always review scripts before running them.
+Official repo: https://github.com/octra-labs/webcli
 
 ---
 
-## Environment (required)
-- Best: WSL2 on Windows 11/10 with **Ubuntu 22.04** or **24.04 LTS** ✅  
-- Also works on: native Linux (Ubuntu/Debian) and macOS  
-- Python: **Python 3.10+**  
-- C++ compiler: **g++** supporting **C++17** (required to build libpvac — PVAC/HFHE C++ library)  
-- Reason: libpvac is compiled from C++ in pvac/ and is required for "Encrypt Balance" to work
+## Quick Setup (under 5 minutes)
 
----
+### 1. Open WSL / Ubuntu Terminal
+- Press `Windows key` → type **Ubuntu** (or **WSL**) → open it  
+  (or open PowerShell and type `wsl` then Enter)
 
-## Full step-by-step setup
+### 2. Install required packages (one-time)
+Copy and paste this single line:
 
-> These exact steps are taken from the official reference client and from real-world usage.
-
-1) Install WSL2 (Windows only)
-- Open PowerShell as Administrator and run:
-```powershell
-wsl --install
-```
-- Restart PC, then open your installed Ubuntu terminal from the Start menu.
-
-note: you can skip this step of installing wsl if you have it already. or alternatively you can use ubuntu.
-
-2) Update system and install build dependencies (CRITICAL for libpvac)
-- Open your Ubuntu terminal (WSL or native) and run:
 ```bash
-sudo apt update && sudo apt upgrade -y
-sudo apt install -y g++ make build-essential python3 python3-venv python3-pip python3-dev
-```
-- for macOS
-```bash
-xcode-select --install
+sudo apt update && sudo apt install -y g++ libssl-dev make
 ```
 
-(Ensure g++ is installed and supports C++17. `g++ --version` should show a modern release.)
+Enter your password when asked.
 
-3) Clone the official Octra reference client
+### 3. Clone & Setup the wallet
+Now run these commands one by one:
 ```bash
-git clone https://github.com/octra-labs/octra_ref_client.git
-cd octra_ref_client
-```
-
-4) Make the setup script executable and run it (this does EVERYTHING automatically)
-```bash
+git clone https://github.com/octra-labs/webcli.git
+cd webcli
 chmod +x setup.sh
 ./setup.sh
 ```
 
-What `setup.sh` does:
-- Checks for `g++` and `python3`
-- Compiles `libpvac` (PVAC-HFHE C++ library with SIMD support) inside the `pvac/` folder ← THIS IS WHY "Encrypt Balance" works for others but not you if libpvac didn't build
-- Creates a Python virtual environment (`venv`)
-- Installs all Python dependencies into the venv
-- Prints the final run command at the end
+→ This builds everything (libpvac + C++ server). Takes 2–5 minutes.
 
-5) Create / configure your `wallet.json`
-- If `wallet.json` doesn't exist after setup, create it manually:
+### 4. Start the web client
+After setup finishes, run:
 ```bash
-nano wallet.json
-```
-- Paste exactly this structure (replace the placeholders with your values):
-```json
-{
-  "priv": "0xYOUR_PRIVATE_KEY_HERE",
-  "addr": "octYOUR_ADDRESS_HERE",
-  "rpc": "http://165.227.225.79:8080"
-}
+./octra_wallet
 ```
 
-IMPORTANT: Use the raw IP `http://165.227.225.79:8080` for devnet (the `https://devnet.octra.com` hostname sometimes has issues). Use the above IP RPC in `wallet.json`.
+Leave this terminal window open (the server must keep running).
 
-How to get a wallet:
-- Generate one with the separate wallet generator repo:
-```bash
-git clone https://github.com/octra-labs/wallet-gen.git
-cd wallet-gen
-./wallet-generator.sh
-```
-- Or import your existing Octra private key (mainnet keys work 100% on devnet)
+### 5. Open in browser
+Open Chrome/Edge and go to:
 
-6) Run the client
-```bash
-./venv/bin/python3 cli.py
-```
-You will get a TUI menu with options including:
-- Refresh / Check Balance
-- Encrypt Balance (Shield public OCT to private HFHE balance) ← this is usually the step that fails when libpvac was not built
-- Stealth Transfer
-- Decrypt, etc.
+http://127.0.0.1:8420
+
+Done! 🎉
 
 ---
 
-## Post-setup usage
-- Claim faucet (devnet): https://faucet-devnet.octra.com — enter your `oct...` address (10 OCT every 24h)
-- After claiming from faucet, go to CLI → **Encrypt Balance**
+## First Time Use
+1. Create New Wallet or Import Private Key (Devnet only!)
+2. Set a 6-digit PIN (encrypts your wallet locally)
+3. Claim test tokens → https://faucet-devnet.octra.com
+4. Refresh page → balance shows up
+
+Useful links:
 - Explorer: https://scan.octra.com
+- Devnet RPC: auto-configured
 
 ---
 
-## Quick verification & helpful commands
+## Troubleshooting
 
-- Confirm `g++`:
-```bash
-g++ --version
-```
+- ./setup.sh fails on missing packages?  
+  Run again: sudo apt install -y g++ libssl-dev make
 
-- Confirm Python:
-```bash
-python3 --version
-```
+- Want different port?  
+  ./octra_wallet 9000 then open http://127.0.0.1:9000
 
-- Confirm `pvac` build artifacts (after `./setup.sh`):
-```bash
-ls -la pvac/
-# look for .so or shared library files that the Python client imports
-```
+- Server not starting?  
+  Close terminal → reopen WSL → cd webcli → ./octra_wallet
 
-- If venv exists, always run via venv:
-```bash
-./venv/bin/python3 cli.py
-```
-(Do NOT run `python3 cli.py` outside the venv unless you explicitly activate the venv.)
-
----
-
-## Troubleshooting (common problems & solutions)
-
-- "No such file or directory: requirements.txt"  
-  → This repo does NOT use `requirements.txt` in the root. Use `setup.sh` instead!
-
-- `libpvac` build fails / "encrypt balance" errors  
-  → Make sure you ran:
-  ```bash
-  sudo apt install -y g++ make build-essential
-  ```
-  then re-run:
-  ```bash
-  ./setup.sh
-  ```
-
-- Permission denied when running `setup.sh`  
-  → Ensure the script is executable:
-  ```bash
-  chmod +x setup.sh
-  ./setup.sh
-  ```
-
-- venv issues (broken venv / dependency errors)  
-  → Remove the `venv` folder and re-run `./setup.sh`:
-  ```bash
-  rm -rf venv
-  ./setup.sh
-  ```
-
-- Still can't encrypt (proof generation fails)  
-  → Verify `pvac/` contains compiled libraries:
-  ```bash
-  ls -la pvac/
-  # you should see .so or similar built objects
-  ```
-  If missing, the C++ build failed — reinstall g++/build-essential and re-run `./setup.sh`.
-
-- RPC connection error / client cannot talk to devnet  
-  → Edit `wallet.json` and ensure `rpc` is set to:
-  ```text
-  "rpc": "http://165.227.225.79:8080"
-  ```
-  Hostnames like `https://devnet.octra.com` can sometimes fail — use the raw IP.
-
----
-
-## Extra tips & notes
-- Always run the client with:
-```bash
-./venv/bin/python3 cli.py
-```
-(Do not rely on the system Python unless venv is activated.)
-
-- Backup `wallet.json` securely in multiple safe places (do not share your `priv` key).
-
-- This client is devnet-only right now (mainnet merge expected ~1 week from Feb 2026 — verify upstream status before using mainnet).
-
-- Proof generation is slow/unoptimized on devnet — expected durations: **30–500 seconds** on first encrypt (this is normal).
-
----
-
-## One-click install script (WSL2 / Ubuntu 22.04 / 24.04 — REVIEW BEFORE RUNNING)
-
-This script automates the steps above in an Ubuntu environment. Always read and understand scripts before running them.
-
-Save as `octra-devnet-one-click.sh`, review, then:
-```bash
-chmod +x octra-devnet-one-click.sh
-./octra-devnet-one-click.sh
-```
-
-Script contents:
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
-echo "=== Octra Devnet Reference Client One-Click Installer ==="
-echo "Review this script before running. This is intended for Ubuntu (WSL2/native)."
-
-# Prompt
-read -p "Continue? (y/N): " yn
-if [[ "${yn,,}" != "y" ]]; then
-  echo "Aborted."
-  exit 1
-fi
-
-# Update + install build deps
-echo "Updating and installing build dependencies..."
-sudo apt update && sudo apt upgrade -y
-sudo apt install -y git g++ make build-essential python3 python3-venv python3-pip python3-dev
-
-# Clone official client
-if [ -d "octra_ref_client" ]; then
-  echo "octra_ref_client already exists. Skipping clone."
-else
-  git clone https://github.com/octra-labs/octra_ref_client.git
-fi
-cd octra_ref_client
-
-# Run setup.sh
-if [ -f setup.sh ]; then
-  chmod +x setup.sh
-  echo "Running setup.sh (this will build libpvac, create venv, and install Python deps)..."
-  ./setup.sh
-else
-  echo "ERROR: setup.sh not found in octra_ref_client. Exiting."
-  exit 1
-fi
-
-echo ""
-echo "=== One-click script finished ==="
-echo "If wallet.json does not exist, create it with:"
-echo '{
-  "priv": "0xYOUR_PRIVATE_KEY_HERE",
-  "addr": "octYOUR_ADDRESS_HERE",
-  "rpc": "http://165.227.225.79:8080"
-}'
-echo "Run the client with: ./venv/bin/python3 cli.py"
-``` 
-
----
-
-## Helpful reference table
-
-| Item | Value / Command |
-|------|-----------------|
-| Official repo to clone | `https://github.com/octra-labs/octra_ref_client.git` |
-| Devnet RPC (use this IP) | `http://165.227.225.79:8080` |
-| Run client | `./venv/bin/python3 cli.py` |
-| Faucet | `https://faucet-devnet.octra.com` |
-| Explorer | `https://scan.octra.com` |
-
----
-
-## Final checklist (before running encrypt)
-- [ ] Running on recommended environment (WSL2 Ubuntu 22.04/24.04, or native Linux/macOS)  
-- [ ] Python 3.10+ available  
-- [ ] g++ / build-essential installed (C++17 support)  
-- [ ] `./setup.sh` finished successfully (check `pvac/` for built libs)  
-- [ ] `wallet.json` created with `rpc` set to `http://165.227.225.79:8080`  
-
----
-
-If you want, I can:
-- produce a ready-to-commit `README.md` file with this content, or
-- create the `octra-devnet-one-click.sh` script file in the repo for you to review and commit.
-
-Which would you like me to do next?
+- Slow build? Just let it finish — first time is normal.
