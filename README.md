@@ -34,6 +34,8 @@ wsl --install
 ```
 - Restart PC, then open your installed Ubuntu terminal from the Start menu.
 
+note: you can skip this step of installing wsl if you have it already. or alternatively you can use ubuntu.
+
 2) Update system and install build dependencies (CRITICAL for libpvac)
 - Open your Ubuntu terminal (WSL or native) and run:
 ```bash
