@@ -1,6 +1,7 @@
 # octra-devnet-cli-setup
 A complete well-detailed walkthrough for installing and using the Octra terminal client (from octra-labs/octra_pre_client) on the Devnet network.
-Octra is an FHE-powered blockchain for encrypted computations. This guide covers:
+
+ Octra is an FHE-powered blockchain for encrypted computations. This guide covers:
 - Prerequisites (Python 3.8+, Git)
 - Cloning & virtual environment setup
 - Installing dependencies
